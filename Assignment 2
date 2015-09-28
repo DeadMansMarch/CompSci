@@ -1,0 +1,41 @@
+(ns testsss.core)
+
+(defn Multiply
+  [VC]
+  (apply * VC)
+  )
+
+(defn Square 
+  [Num]
+  (* Num Num)
+  )
+
+(defn SquareVectors
+  [Vector]
+  (map Square Vector)
+  
+  )
+
+(defn AddSquares
+  [Vec]
+  (apply + (SquareVectors Vec))
+ )
+
+(defn Discrim
+  [Vec]
+  (- (Square((nth Vec 1)) (* 4 (nth Vec 0) (nth Vec 2))))
+
+(defn Quadratic
+  [Vec]
+  (let [
+        
+        Discrimanant (Discrim Vec)
+        
+        ]
+    
+  (let [Discrimanant (Math/sqrt Discrimanant)]
+    []
+  )
+  ))
+
+(Quadratic [12 2 3])
