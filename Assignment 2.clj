@@ -22,19 +22,18 @@
  )
 
 (defn Discrim
-  [Vec]
-  (- (Square(nth Vec 1)) (* 4 (nth Vec 0) (nth Vec 2))))
+  [[a b c]]
+  (- (Square b) (* 4 a c)))
 
 (defn Quadratic
-  [Vector]
-  (println Vector)
+  [[a b c]]
   (let [
-        Discrimanant (Discrim Vector)
+        D (Math/sqrt(Discrim [a b c]))
+      
         ]
-    (let [Discrim (Math/sqrt Discrimanant)]
-      [(/ (+ (* -1 (nth Vector 1)) Discrim) (* 2 (nth Vector 0))) (/ (- (* -1 (nth Vector 1)) Discrim) (* 2 (nth Vector 0)))]
+      [(/ (+ (* -1 b) D) (* 2 a)) (/ (- (* -1 b) D) (* 2 a))]
       )
-    ))
+    )
 
 ;;Extra credit :
 
@@ -43,4 +42,4 @@
   (map Quadratic VoV)
   )
 
-(Quadratic '([2 4 6] [3 8 12]))
+(VectorQuadratic [[1 5 1] [3 8 12]])
