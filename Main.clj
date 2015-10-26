@@ -1,39 +1,21 @@
+(ns tests.core)
 
-(ns testing.core)
+#(%1 + %2 + %3)
 
-(defn Exp
-  [X]
-  (* X X)
-  )
+#(/ (+ %1 %2) 2)
 
-(defn Comp-Area
-  [Base Hight]
-  (/ (* Base Hight),2)
-  )
+(defn just-odd
+  [V]
+  (apply list (filter odd? V)))
 
-(defn DistanceForm
-  [X,Y,A,B]
-  
-  (Math/sqrt (+ (Exp (- X A)) (Exp (- Y B))))
-  )
+(defn some-odd
+  [V less]
+  (apply list (filter #(< (%1 %1) less) (filter odd? V))))
 
-(defn SqrCube
-  [Int]
-  (if (even? Int) (* Int Int) (* Int Int Int))
-  
-  )
+(defn length-strings
+  [L]
+  (reduce #(%1 + (count %2)) 0 L))
 
-(defn GetDiscrim
-  [a b c]
-  
-  (- (Exp b) (* 4 a c))
-  
-  )
-
-(defn GetRealRoots
-  [X,Y,Z]
-  (let [X,(GetDiscrim X Y Z)])
-  (if (= X 0) (println "One [Real]")(if (> X 0) (println "Two [Real]") (if (< X 0) (println "2 [Complex]"))))
-  )
-
-(GetRealRoots -4 10 0)
+(defn wacky-add
+  [VecOfVec]
+  (reduce #(+ %1 (apply + %2)) 0 VecOfVec))
