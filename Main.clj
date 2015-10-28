@@ -19,3 +19,15 @@
 (defn wacky-add
   [VecOfVec]
   (reduce #(+ %1 (apply + %2)) 0 VecOfVec))
+
+(ns test.core)
+
+(defn all-pairs
+  [LA LB]
+  (for [x LA y LB] [x y]))
+
+(defn in-order
+  [[Ind,Str]]
+  (map #(nth Str %1) Ind))
+
+(in-order [[0 1 2] ["wow" "ok" "then"]])
