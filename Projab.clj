@@ -1,7 +1,7 @@
 (ns project1.core)
 
 (def Stats {})
-(def CurrentStat "none")
+(def CurrentStat "default")
 
 (defn Help
   []
@@ -60,9 +60,9 @@
       "prints" (println "Sorted Stat :" (sort Stat))
       "stdev" (println "Standard Deviation :" (Stdev Stat))
       "five" (println (first (sort Stat)) () (Median Stat) () (last (sort Stat)))
-      "setstat" (let [NewStat (read-line)] (println "Setting stat as :" NewStat) (SetAsStat NewStat))
+      "use" (let [NewStat (read-line)] (println "Setting stat as :" NewStat) (SetAsStat NewStat))
       "addstat" (DefineStat)
-      "showstat" (println Stats)
+      "summary" (println Stats)
      (println "Not a valid command."))
     ))
   
