@@ -5,6 +5,8 @@
   (spit "StatCapture.txt" Map)
   )
 
+
+
 (def Stats {:default [1 2 3 4 5]})
 
 (def Stats (read-string (slurp "StatCapture.txt")))
@@ -15,7 +17,7 @@
 
 (defn Help
   []
-  (println "Options for stat set :")
+  (println "Options for stat" CurrentStat ":")
   (println "    mean - Calculate the mean of the set.")
   (println "    median - Calculate the median of the set.")
   (println "    sum - Calculate the sum of the set.")
@@ -25,6 +27,7 @@
   (println "    help - Print the help menu.")
   (println "    five - Print the five number summary.")
   (println "    use ds - Change the current dataset to 'ds'.")
+  (println "    remove ds - Remove dataset with name 'ds'.")
   (println "    save - Save the program.")
   (println "    quit - End the program."))
 
@@ -55,7 +58,8 @@
 
 (defn SetAsStat
   [String]
-  (def CurrentStat (keyword String)))
+  (def CurrentStat (keyword String))
+  (println "Using" CurrentStat "as dataset."))
 
 (defn DefineStat
   [Name,Data]
@@ -82,9 +86,13 @@
       "add" (let [S (rest (BreakString UIn))]
               (DefineStat (first S) (vec (rest S))))
       
-      "use" (SetAsStat (last (BreakString UIn)))
+      "remove" (dissoc Stats (first (rest (BreakString UIn))))
       
-      "current" (println CurrentStat)
+      "use" (SetAsStat (last (BreakString UIn))) (println "Using stat" CurrentStat)
+      
+      "summary" (println Stats)
+      (println "Not a valid option.")
+     
      )
     ))
   
