@@ -5,6 +5,8 @@
   (spit "StatCapture.txt" Map)
   )
 
+;;(defn SaveDef
+;;  (Save {:default [1 2 3 4 5]}))
 
 
 (def Stats {:default [1 2 3 4 5]})
@@ -86,12 +88,12 @@
       "add" (let [S (rest (BreakString UIn))]
               (DefineStat (first S) (vec (rest S))))
       
-      "remove" (dissoc Stats (first (rest (BreakString UIn))))
+      "remove" ((dissoc Stats (keyword (nth (BreakString UIn) 1))) (println (keyword (nth (BreakString UIn) 1))))
       
-      "use" (SetAsStat (last (BreakString UIn))) (println "Using stat" CurrentStat)
+      "use" ((SetAsStat (last (BreakString UIn))) (println "Using stat" CurrentStat))
       
       "summary" (println Stats)
-      (println "Not a valid option.")
+      "No such clause"
      
      )
     ))
