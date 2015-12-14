@@ -1,4 +1,6 @@
-(ns computerscience.project1b)
+(ns project1b.core)
+(:import (javax.swing SwingUtilities JFrame JPanel JLabel JButton)
+         (java.awt FlowLayout BorderLayout Color))
 (require '[clojure.string :as str])
 
 (def Stats {:default [1 2 3 4 5]})
@@ -15,7 +17,7 @@
   (Save {:default [1 2 3 4 5]})
   )
 
-;;
+;;(write-empty-dataset)
 
 (defn Help
   []
@@ -32,6 +34,28 @@
   (println "    remove ds - Remove dataset with name 'ds'.")
   (println "    save - Save the program.")
   (println "    quit - End the program."))
+
+(defn do-paint
+  [g panel]
+  (let [SX (.getWidth (.size panel))
+        SY (.getHight (.size panel))]
+    (.clearRect g 0 0 SX SY)
+    (.setColor g Color/black)
+    (.fillRect g 12 12 (- SX 24) (- SY 24))
+    ))
+
+(defn makeGui
+  []
+  (let [F (JFrame.)
+        panel (make-panel)]
+    
+    (doto frame
+      (.setLayout (BorderLayout.))
+      (.setSize 640 480)
+      (.setDefaultCloseOperation JFrame/DISPOSE_ON_CLOSE)
+      (.add (drawing-panel panel) "Center")
+      (.setVisible true)
+      )))
 
 (defn BreakString
   [String]
