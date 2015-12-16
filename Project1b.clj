@@ -1,11 +1,14 @@
-(ns project1b.core)
+(ns project1b.core
 (:import (javax.swing SwingUtilities JFrame JPanel JLabel JButton)
-         (java.awt FlowLayout BorderLayout Color))
+         (java.awt FlowLayout BorderLayout Color)))
+
 (require '[clojure.string :as str])
 
 (def Stats {:default [1 2 3 4 5]})
 (def Stats (read-string (slurp "StatCapture.txt")))
 (def CurrentStat "default")
+(def GraphicsUse [""])
+
 
 (defn Save
   [Map]
@@ -34,28 +37,51 @@
   (println "    remove ds - Remove dataset with name 'ds'.")
   (println "    save - Save the program.")
   (println "    quit - End the program."))
+;;boxplot functions
 
 (defn do-paint
   [g panel]
   (let [SX (.getWidth (.size panel))
-        SY (.getHight (.size panel))]
+        SY (.getHeight (.size panel))]
+    
     (.clearRect g 0 0 SX SY)
     (.setColor g Color/black)
     (.fillRect g 12 12 (- SX 24) (- SY 24))
+    (case (nth GraphicsUse 0)
+      "box" (do
+              (.drawString "Box Plots []")
+              )
+      "scatter" (do
+                  
+                  )
+      :default)
     ))
+
+(defn make-panel
+  []
+  (proxy [JPanel][]
+    (paint [g]
+      (do-paint g this))))
+
+(defn drawing-panel
+  [panel]
+  (doto panel
+    (.setSize 600 300)))
 
 (defn makeGui
   []
   (let [F (JFrame.)
         panel (make-panel)]
-    
-    (doto frame
+    (def GraphicsUse panel)
+    (doto F
       (.setLayout (BorderLayout.))
       (.setSize 640 480)
       (.setDefaultCloseOperation JFrame/DISPOSE_ON_CLOSE)
       (.add (drawing-panel panel) "Center")
       (.setVisible true)
       )))
+
+;;EndGraphics
 
 (defn BreakString
   [String]
@@ -123,6 +149,14 @@
   (if (nil? (get Stats (keyword s))) (println "No such dataset.") 
     (SetAsStat s)))
 
+(defn boxplot
+  [DataSets]
+  (defn GraphicsUse ["box", DataSets]
+  (let [frame (makeGui)]
+    (.setTitle frame "Box Plot")
+    )
+  )
+
 (defn KeyReader
   [UIn]
   (let [Stat (get Stats (keyword CurrentStat))]
@@ -141,6 +175,7 @@
       "remove" (remove-set (nth (BreakString UIn) 1))
       "use" (use (last (BreakString UIn)))
       "summary" (summary)
+      "boxplots" (boxplot (rest (BreakString UIn)))
       (println "No such clause.")
      )
     ))
