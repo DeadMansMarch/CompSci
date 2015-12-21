@@ -1,27 +1,21 @@
-(ns project1b.core
-(:import (javax.swing SwingUtilities JFrame JPanel JLabel JButton)
-         (java.awt FlowLayout BorderLayout Color)))
+(ns computerscience.project1bFinal)
 
 (require '[clojure.string :as str])
 
 (def Stats {:default [1 2 3 4 5]})
-(def Stats (read-string (slurp "StatCapture.txt")))
 (def CurrentStat "default")
-(def GraphicsUse [""])
-
 
 (defn Save
   [Map]
   (spit "StatCapture.txt" Map)
   )
 
-(defn write-empty-dataset
-  []
-  (Save {:default [1 2 3 4 5]})
-  )
+(try 
+  (def Stats (read-string (slurp "StatCapture.txt")))
+  (catch Exception e (println "No save...writing.") 
+    (Save {:default [1 2 3 4 5]})))
 
-;;(write-empty-dataset)
-
+(def Stats (read-string (slurp "StatCapture.txt")))
 (defn Help
   []
   (println "Options for stat" CurrentStat ":")
@@ -37,51 +31,6 @@
   (println "    remove ds - Remove dataset with name 'ds'.")
   (println "    save - Save the program.")
   (println "    quit - End the program."))
-;;boxplot functions
-
-(defn do-paint
-  [g panel]
-  (let [SX (.getWidth (.size panel))
-        SY (.getHeight (.size panel))]
-    
-    (.clearRect g 0 0 SX SY)
-    (.setColor g Color/black)
-    (.fillRect g 12 12 (- SX 24) (- SY 24))
-    (case (nth GraphicsUse 0)
-      "box" (do
-              (.drawString "Box Plots []")
-              )
-      "scatter" (do
-                  
-                  )
-      :default)
-    ))
-
-(defn make-panel
-  []
-  (proxy [JPanel][]
-    (paint [g]
-      (do-paint g this))))
-
-(defn drawing-panel
-  [panel]
-  (doto panel
-    (.setSize 600 300)))
-
-(defn makeGui
-  []
-  (let [F (JFrame.)
-        panel (make-panel)]
-    (def GraphicsUse panel)
-    (doto F
-      (.setLayout (BorderLayout.))
-      (.setSize 640 480)
-      (.setDefaultCloseOperation JFrame/DISPOSE_ON_CLOSE)
-      (.add (drawing-panel panel) "Center")
-      (.setVisible true)
-      )))
-
-;;EndGraphics
 
 (defn BreakString
   [String]
@@ -93,10 +42,10 @@
 
 (defn Median
   [Stat]
-  (if odd? (count Stat) (nth (sort Stat) (/ (+ (count Stat) 1) 2))) 
-  (let 
-    [S (nth (sort Stat) (/ (+ (count Stat) 1) 2))]
-    (Mean [(- S 2) (- S 1)])))
+  (let [S (sort Stat) counter (count S) middle (int (/ counter 2))]
+    (if (odd? counter)
+      (nth S middle)
+      (/ (+ (get S middle)) (get S (- middle 1)) 2))))
 
 (defn Stdev
   [Stat]
@@ -123,9 +72,11 @@
 
 (defn DefineStat
   [Name,Data]
-  (let [Data (map #(read-string %1) Data)]
-    (def Stats (assoc Stats (keyword Name) (vec Data)))
+  (let [Data (map #(read-string %1) Data) Data (vec Data)
+        Data (map #(double %1) Data)]
+    (def Stats (assoc Stats (keyword Name) Data))
     (SetAsStat Name)
+    
     (println "Stat added :" Name ", " Data)))
 
 (defn remove-set
@@ -137,25 +88,17 @@
 
 (defn summary
   []
-  (println "Summary of all datasets: ")
+  (println "Summary of all datasets: " )
    (doseq [x (map-indexed #(nth %2 0) Stats)]
      
        (println "    " 
                 (if (= x (keyword CurrentStat)) "*" "")
                 x (get Stats x) (five (get Stats x)))))
 
-(defn use
+(defn Use
   [s]
   (if (nil? (get Stats (keyword s))) (println "No such dataset.") 
     (SetAsStat s)))
-
-(defn boxplot
-  [DataSets]
-  (defn GraphicsUse ["box", DataSets]
-  (let [frame (makeGui)]
-    (.setTitle frame "Box Plot")
-    )
-  )
 
 (defn KeyReader
   [UIn]
@@ -173,13 +116,11 @@
       "add" (let [S (rest (BreakString UIn))]
               (DefineStat (first S) (vec (rest S))))
       "remove" (remove-set (nth (BreakString UIn) 1))
-      "use" (use (last (BreakString UIn)))
+      "use" (Use (last (BreakString UIn)))
       "summary" (summary)
-      "boxplots" (boxplot (rest (BreakString UIn)))
       (println "No such clause.")
      )
     ))
-  
 (defn Load
   []
   (println "Welcome to SSS [Simple Statistics System].")
